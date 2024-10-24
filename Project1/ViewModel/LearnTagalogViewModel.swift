@@ -22,8 +22,8 @@ struct LearnTagalogViewModel {
         lessonPlan.topics
     }
     
-    func getTopic(by id: UUID) -> LearnTagalogModel.Topic? {
-        if let topic = lessonPlan.topics.first(where: { $0.id == id }) {
+    func getTopic(by name: String) -> LearnTagalogModel.Topic? {
+        if let topic = lessonPlan.topics.first(where: { $0.name == name }) {
             return topic
         }
         return nil

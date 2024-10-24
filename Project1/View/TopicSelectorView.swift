@@ -23,18 +23,18 @@ struct TopicSelectorView: View {
                     ]
                     
                     LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(learnTagalogViewModel.topics.sorted(by: { $0.id < $1.id }), id: \.id) { topics in
+                        ForEach(learnTagalogViewModel.topics.sorted(by: { $0.name < $1.name }), id: \.name) { topic in
                             
                             NavigationLink {
                                 TopicLessonView(
                                     learnTagalogViewModel: LearnTagalogViewModel(),
-                                    topicId: topics.id
+                                    topicName: topic.name
                                 )
                             } label: {
                                 TopicCell(
                                     learnTagalogViewModel: LearnTagalogViewModel(),
-                                    topicName: topics.name,
-                                    topicImage: topics.image
+                                    topicName: topic.name,
+                                    topicImage: topic.image
                                 )
                             }
                         }

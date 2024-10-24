@@ -10,11 +10,11 @@ import SwiftUI
 struct TopicLessonView: View {
     
     let learnTagalogViewModel: LearnTagalogViewModel
-    let topicId: UUID
+    let topicName: String
     
     var body: some View {
             NavigationStack {
-                Text("\(String(describing: learnTagalogViewModel.getTopic(by: topicId)?.lessonText))")
+                Text("\(learnTagalogViewModel.getTopic(by: topicName)?.name ?? "No Topic Found")")
                 VStack {
                     NavigationLink {
                         FlashCardPracticeView()
@@ -28,6 +28,6 @@ struct TopicLessonView: View {
                     }
                 }
             }
-            .navigationTitle("\(String(describing: learnTagalogViewModel.getTopic(by: topicId)?.name))")
+            .navigationTitle("\(String(describing: learnTagalogViewModel.getTopic(by: topicName)?.name ?? ""))")
         }
     }
