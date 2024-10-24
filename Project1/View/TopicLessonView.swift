@@ -14,20 +14,26 @@ struct TopicLessonView: View {
     
     var body: some View {
             NavigationStack {
-                Text("\(learnTagalogViewModel.getTopic(by: topicName)?.name ?? "No Topic Found")")
+                Text("\(learnTagalogViewModel.getTopic(by: topicName)?.lessonText ?? "")")
                 VStack {
                     NavigationLink {
-                        FlashCardPracticeView()
+                        FlashCardPracticeView(
+                            learnTagalogViewModel: LearnTagalogViewModel(),
+                            topicName: learnTagalogViewModel.getTopic(by: topicName)?.name ?? ""
+                        )
                     } label: {
                         Text("Practice with Flashcards")
                     }
                     NavigationLink {
-                        QuizScreenView()
+                        QuizScreenView(
+                            learnTagalogViewModel: LearnTagalogViewModel(),
+                            topicName: learnTagalogViewModel.getTopic(by: topicName)?.name ?? ""
+                        )
                     } label: {
                         Text("Take Quiz")
                     }
                 }
             }
-            .navigationTitle("\(String(describing: learnTagalogViewModel.getTopic(by: topicName)?.name ?? ""))")
+            .navigationTitle("\(learnTagalogViewModel.getTopic(by: topicName)?.name ?? "")")
         }
     }

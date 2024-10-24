@@ -29,7 +29,28 @@ struct LearnTagalogViewModel {
         return nil
     }
     
+    func getQuestion(by name: String, and questionNum: Int) -> LearnTagalogModel.QuizItem? {
+        if let question = lessonPlan.topics.first(where: { $0.name == name })?.quiz[questionNum] {
+            return question
+        }
+        return nil
+    }
+    
+    func getTotalQuestions(by name: String) -> Int {
+        if let topic = lessonPlan.topics.first(where: { $0.name == name }) {
+            return topic.quiz.count
+        }
+        return 0
+    }
+    
+    func getCurrentQuestion(by name: String, and index: Int) -> LearnTagalogModel.QuizItem? {
+        guard let topic = lessonPlan.topics.first(where: { $0.name == name }) else { return nil }
+        return topic.quiz.indices.contains(index) ? topic.quiz[index] : nil
+    }
+    
     // MARK: - User Intent
+    
+    
     
     // MARK: - Private Helpers
 

@@ -21,6 +21,28 @@ struct TopicSelectorView: View {
                         GridItem(),
                         GridItem()
                     ]
+                    ZStack {
+                        Image("Home_Image")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: .infinity, height: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
+                            .shadow(radius: 5)
+                            .padding(.horizontal)
+                        
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Text("📍 Mount Mayon - Albay, Philippines")
+                                    .foregroundColor(.white)
+                                    .background(Color.black.opacity(0.2))
+                                    .multilineTextAlignment(.leading)
+                                    .padding()
+                                Spacer()
+                            }
+                        }
+                    }
                     
                     LazyVGrid(columns: columns, spacing: 20) {
                         ForEach(learnTagalogViewModel.topics.sorted(by: { $0.name < $1.name }), id: \.name) { topic in

@@ -9,12 +9,12 @@ import SwiftUI
 
 struct OverallProgressView: View {
     
-    let topics: [LearnTagalogModel.Topic] = LearnTagalogViewModel.init().topics
+    let learnTagalogViewModel: LearnTagalogViewModel
     
     var body: some View {
         VStack {
             Form {
-                ForEach(topics.sorted(by: { $0.id < $1.id }), id: \.id) { topics in
+                ForEach(learnTagalogViewModel.topics.sorted(by: { $0.name < $1.name }), id: \.name) { topics in
                     Text("\(topics.name)")
                 }
             }

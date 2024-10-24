@@ -8,7 +8,17 @@
 import SwiftUI
 
 struct FlashCardPracticeView: View {
+    
+    let learnTagalogViewModel: LearnTagalogViewModel
+    let topicName: String
+    
     var body: some View {
-        Text("Hello, Flashcards!")
+        NavigationStack {
+            List(learnTagalogViewModel.getTopic(by: topicName)?.vocab ?? []) { vocab in
+                Text(vocab.englishWord)
+            }
+            .listStyle(.plain)
+            .navigationTitle(topicName)
+        }
     }
 }
