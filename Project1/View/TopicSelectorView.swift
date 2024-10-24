@@ -10,7 +10,7 @@ import SwiftUI
 struct TopicSelectorView: View {
     let columnLayout = Array(repeating: GridItem(), count: 2)
     
-    let topics: [LearnTagalog.Topic] = LearnTagalogViewModel.init().topics
+    let learnTagalogViewModel: LearnTagalogViewModel
 
     var body: some View {
         NavigationStack {
@@ -23,44 +23,55 @@ struct TopicSelectorView: View {
                     ]
                     
                     LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(topics.sorted(by: { $0.id < $1.id }), id: \.id) { topics in
-                            TopicCell(topic: topics)
+                        ForEach(learnTagalogViewModel.topics.sorted(by: { $0.id < $1.id }), id: \.id) { topics in
+                            
+                            NavigationLink {
+                                TopicLessonView(
+                                    learnTagalogViewModel: LearnTagalogViewModel(),
+                                    topicId: topics.id
+                                )
+                            } label: {
+                                TopicCell(
+                                    learnTagalogViewModel: LearnTagalogViewModel(),
+                                    topicName: topics.name,
+                                    topicImage: topics.image
+                                )
+                            }
                         }
                     }
                     .padding()
                 }
             }
-            .navigationTitle("Learn Tagalog")
+            .navigationTitle("Learn \(learnTagalogViewModel.languageName)")
         }
     }
 }
 
 struct TopicCell: View {
-    var topic: LearnTagalog.Topic
-    @State var tasksCompleted: Bool = true
+    
+    let learnTagalogViewModel: LearnTagalogViewModel
+    let topicName: String
+    let topicImage: String
     
     var body: some View {
-        NavigationLink {
-            TopicLessonView(topic: topic)
-        } label: {
-            ZStack {
-                Image(topic.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: .infinity, height:100)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 2))
+        ZStack {
+            Image(topicImage)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: .infinity, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 2))
 
-                Text(topic.name)
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                    .background(Color.black.opacity(0.7))
-                    .padding(5)
-            }
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
+            Text(topicName)
+                .font(.headline)
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .background(Color.black.opacity(0.7))
+                .padding(5)
+        }
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 5)
 //            .overlay(
 //                Group {
 //                    if tasksCompleted {
@@ -75,6 +86,5 @@ struct TopicCell: View {
 //                    .padding(.trailing, 1)
 //                , alignment: .bottomTrailing
 //            )
-        }
     }
 }

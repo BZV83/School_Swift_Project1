@@ -8,16 +8,29 @@
 import Foundation
 
 struct LearnTagalogViewModel {
-    var topics: [LearnTagalog.Topic] = [
-        LearnTagalog.Topic(name: "Greetings and Farewells", image: "hello_picture"),
-        LearnTagalog.Topic(name: "Common Phrases", image: "phrases_picture"),
-        LearnTagalog.Topic(name: "Numbers", image: "numbers_picture"),
-        LearnTagalog.Topic(name: "Colors", image: "color_picture"),
-        LearnTagalog.Topic(name: "Family Vocab", image: "family_picture"),
-        LearnTagalog.Topic(name: "Food Items", image: "food_picture"),
-        LearnTagalog.Topic(name: "Adjectives", image: "adjectives_picture"),
-        LearnTagalog.Topic(name: "Days of the Week", image: "calendar_picture"),
-        LearnTagalog.Topic(name: "Weather Vocab", image: "weather_picture"),
-        LearnTagalog.Topic(name: "Common Verbs", image: "verbs_picture")
-    ]
+    
+    // MARK: - Properties
+    
+    private var lessonPlan: LessonPlan = TagalogLessonPlan(progress: [])
+    
+    // MARK: - Model Access
+    
+    var languageName: String {
+        lessonPlan.languageName
+    }
+    var topics: [LearnTagalogModel.Topic] {
+        lessonPlan.topics
+    }
+    
+    func getTopic(by id: UUID) -> LearnTagalogModel.Topic? {
+        if let topic = lessonPlan.topics.first(where: { $0.id == id }) {
+            return topic
+        }
+        return nil
+    }
+    
+    // MARK: - User Intent
+    
+    // MARK: - Private Helpers
+
 }

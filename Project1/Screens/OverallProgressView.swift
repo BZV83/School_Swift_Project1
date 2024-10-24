@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OverallProgressView: View {
     
-    let topics: [LearnTagalog.Topic] = LearnTagalogViewModel.init().topics
+    let topics: [LearnTagalogModel.Topic] = LearnTagalogViewModel.init().topics
     
     var body: some View {
         VStack {

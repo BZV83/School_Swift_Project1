@@ -8,23 +8,26 @@
 import SwiftUI
 
 struct TopicLessonView: View {
-    let topic: LearnTagalog.Topic
+    
+    let learnTagalogViewModel: LearnTagalogViewModel
+    let topicId: UUID
+    
     var body: some View {
-        NavigationStack {
-            Text("Lesson about topic \(topic.name) goes here.")
-            VStack {
-                NavigationLink {
-                    FlashCardPracticeView()
-                } label: {
-                    Text("Practice with Flashcards")
-                }
-                NavigationLink {
-                    QuizScreenView()
-                } label: {
-                    Text("Take Quiz")
+            NavigationStack {
+                Text("\(String(describing: learnTagalogViewModel.getTopic(by: topicId)?.lessonText))")
+                VStack {
+                    NavigationLink {
+                        FlashCardPracticeView()
+                    } label: {
+                        Text("Practice with Flashcards")
+                    }
+                    NavigationLink {
+                        QuizScreenView()
+                    } label: {
+                        Text("Take Quiz")
+                    }
                 }
             }
+            .navigationTitle("\(String(describing: learnTagalogViewModel.getTopic(by: topicId)?.name))")
         }
-        .navigationTitle("\(topic.name)")
     }
-}
