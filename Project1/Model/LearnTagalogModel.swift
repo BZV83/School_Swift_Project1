@@ -11,6 +11,7 @@ protocol LessonPlan {
     var languageName: String { get }
     var topics: [LearnTagalogModel.Topic] { get }
     var progress: [LearnTagalogModel.Progress] { get set }
+    mutating func flipCard(for card: LearnTagalogModel.VocabCardContent)
 }
 
 struct LearnTagalogModel {
@@ -19,7 +20,7 @@ struct LearnTagalogModel {
         let name: String
         let image: String
         let lessonText: String
-        let vocab: [VocabTerm]
+        var vocab: [VocabCardContent]
         let quiz: [QuizItem]
     }
     
@@ -29,10 +30,17 @@ struct LearnTagalogModel {
         var correctAnswer: String
     }
     
-    struct VocabTerm: Identifiable {
+    class VocabCardContent: Identifiable, ObservableObject {
         let id = UUID()
         var foreignWord: String
         var englishWord: String
+        var isFaceUp = true
+        
+        init(foreignWord: String, englishWord: String, isFaceUp: Bool = true) {
+            self.foreignWord = foreignWord
+            self.englishWord = englishWord
+            self.isFaceUp = isFaceUp
+        }
     }
     
     struct Progress {
@@ -66,14 +74,14 @@ struct TagalogLessonPlan: LessonPlan {
             can never go wrong by adding a "po".
             """,
             vocab: [
-                LearnTagalogModel.VocabTerm(foreignWord: "Kamusta", englishWord: "Hello"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Ingat po", englishWord: "Goodbye"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Kamusta po kayo?", englishWord: "How are you?"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Mabuti po ako", englishWord: "I'm doing good"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Magandang umaga po", englishWord: "Good morning"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Magandang tanghali po", englishWord: "Good afternoon (noon)"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Magandang hapon po", englishWord: "Good afternoon"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Magandang gabi po", englishWord: "Good night")
+                LearnTagalogModel.VocabCardContent(foreignWord: "Kamusta", englishWord: "Hello"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Ingat po", englishWord: "Goodbye"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Kamusta po kayo?", englishWord: "How are you?"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Mabuti po ako", englishWord: "I'm doing good"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Magandang umaga po", englishWord: "Good morning"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Magandang tanghali po", englishWord: "Good afternoon (noon)"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Magandang hapon po", englishWord: "Good afternoon"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Magandang gabi po", englishWord: "Good night")
                 
             ],
             quiz: [
@@ -103,13 +111,13 @@ struct TagalogLessonPlan: LessonPlan {
             with your greetings and farewells!
             """,
             vocab: [
-                LearnTagalogModel.VocabTerm(foreignWord: "Lunes", englishWord: "Monday"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Martes", englishWord: "Tuesday"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Miyerkules", englishWord: "Wednesday"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Huwebes", englishWord: "Thursday"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Biyernes", englishWord: "Friday"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Sabado", englishWord: "Saturday"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Linggo", englishWord: "Sunday")
+                LearnTagalogModel.VocabCardContent(foreignWord: "Lunes", englishWord: "Monday"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Martes", englishWord: "Tuesday"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Miyerkules", englishWord: "Wednesday"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Huwebes", englishWord: "Thursday"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Biyernes", englishWord: "Friday"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Sabado", englishWord: "Saturday"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Linggo", englishWord: "Sunday")
             ],
             quiz: [
                 LearnTagalogModel.QuizItem(
@@ -139,16 +147,16 @@ struct TagalogLessonPlan: LessonPlan {
             digits everyone!
             """,
             vocab: [
-                LearnTagalogModel.VocabTerm(foreignWord: "Isa", englishWord: "One"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Dalawa", englishWord: "Two"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Tatlo", englishWord: "Three"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Apat", englishWord: "Four"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Lima", englishWord: "Five"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Anim", englishWord: "Six"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Pito", englishWord: "Seven"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Walo", englishWord: "Eight"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Siyam", englishWord: "Nine"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Sampu", englishWord: "Ten")
+                LearnTagalogModel.VocabCardContent(foreignWord: "Isa", englishWord: "One"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Dalawa", englishWord: "Two"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Tatlo", englishWord: "Three"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Apat", englishWord: "Four"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Lima", englishWord: "Five"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Anim", englishWord: "Six"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Pito", englishWord: "Seven"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Walo", englishWord: "Eight"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Siyam", englishWord: "Nine"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Sampu", englishWord: "Ten")
             ],
             quiz: [
                 LearnTagalogModel.QuizItem(
@@ -173,10 +181,10 @@ struct TagalogLessonPlan: LessonPlan {
             which are extremely abundant during typhoon season!
             """,
             vocab: [
-                LearnTagalogModel.VocabTerm(foreignWord: "Pula", englishWord: "Red"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Asul", englishWord: "Blue"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Dilaw", englishWord: "Yellow"),
-                LearnTagalogModel.VocabTerm(foreignWord: "Berde", englishWord: "Green")
+                LearnTagalogModel.VocabCardContent(foreignWord: "Pula", englishWord: "Red"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Asul", englishWord: "Blue"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Dilaw", englishWord: "Yellow"),
+                LearnTagalogModel.VocabCardContent(foreignWord: "Berde", englishWord: "Green")
             ],
             quiz: [
                 LearnTagalogModel.QuizItem(
@@ -198,4 +206,8 @@ struct TagalogLessonPlan: LessonPlan {
     var progress: [LearnTagalogModel.Progress]
     
     // MARK: - Helpers
+    
+    mutating func flipCard(for card: LearnTagalogModel.VocabCardContent) {
+        card.isFaceUp.toggle()
+    }
 }

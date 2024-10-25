@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct LearnTagalogViewModel {
+class LearnTagalogViewModel: ObservableObject {
     
     // MARK: - Properties
     
-    private var lessonPlan: LessonPlan = TagalogLessonPlan(progress: [])
+    @Published private var lessonPlan: LessonPlan = TagalogLessonPlan(progress: [])
     
     // MARK: - Model Access
     
@@ -20,6 +20,13 @@ struct LearnTagalogViewModel {
     }
     var topics: [LearnTagalogModel.Topic] {
         lessonPlan.topics
+    }
+    
+    func getVocab(by topicName: String) -> [LearnTagalogModel.VocabCardContent] {
+        if let vocab = lessonPlan.topics.first(where: { $0.name == topicName })?.vocab {
+            return vocab.shuffled()
+        }
+        return []
     }
     
     func getTopic(by name: String) -> LearnTagalogModel.Topic? {
@@ -49,6 +56,10 @@ struct LearnTagalogViewModel {
     }
     
     // MARK: - User Intent
+    
+    func flipCard(card: LearnTagalogModel.VocabCardContent) {
+        lessonPlan.flipCard(for: card)
+    }
     
     // MARK: - Private Helpers
 
