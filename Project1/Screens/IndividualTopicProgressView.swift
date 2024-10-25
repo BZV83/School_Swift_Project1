@@ -9,9 +9,21 @@ import SwiftUI
 
 struct IndividualTopicProgressView: View {
     
+    let learnTagalogViewModel: LearnTagalogViewModel
     var topic: String?
     
     var body: some View {
-        Text("\(topic ?? "No Topic")")
+        ZStack {
+            Image(systemName: "checkmark.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: .infinity, height: .infinity)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding()
+            
+            Text("\(topic ?? "No Topic")")
+                .foregroundColor(.white)
+                .background(Color.blue)
+        }
     }
 }

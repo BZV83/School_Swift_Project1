@@ -9,11 +9,14 @@ import SwiftUI
 
 struct LearnTagalogHomeView: View {
     
+    @State private var isNavigating = false
     var learnTagalogViewModel: LearnTagalogViewModel
-    
+
     var body: some View{
         TabView {
-            TopicSelectorView(learnTagalogViewModel: LearnTagalogViewModel())
+            TopicSelectorView(
+                learnTagalogViewModel: LearnTagalogViewModel()
+            )
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }

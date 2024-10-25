@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Project1App: App {
+struct LanguageLearningApp: App {
     var body: some Scene {
         WindowGroup {
             LearnTagalogHomeView(learnTagalogViewModel: LearnTagalogViewModel())

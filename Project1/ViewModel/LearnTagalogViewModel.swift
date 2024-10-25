@@ -50,8 +50,6 @@ struct LearnTagalogViewModel {
     
     // MARK: - User Intent
     
-    
-    
     // MARK: - Private Helpers
 
 }

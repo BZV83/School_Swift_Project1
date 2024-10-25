@@ -60,8 +60,8 @@ struct TagalogLessonPlan: LessonPlan {
             name: "Greetings and Farewells",
             image: "hello_picture",
             lessonText: """
-            Filipino people are very kind. A greeting can go a long way.\
-            Here you can find many different greetings and farewells.\
+            Filipino people are very kind. A greeting can go a long way. \
+            Here you can find many different greetings and farewells. \
             Always remember, if a word comes up you do not know, you\
             can never go wrong by adding a "po".
             """,
@@ -98,7 +98,7 @@ struct TagalogLessonPlan: LessonPlan {
             name: "Days of the Week",
             image: "calendar_picture",
             lessonText: """
-            Days of the week are something taught in every language.\
+            Days of the week are something taught in every language. \
             Once you know this, you can string some days of the week\
             with your greetings and farewells!
             """,
@@ -133,7 +133,7 @@ struct TagalogLessonPlan: LessonPlan {
             name: "Numbers",
             image: "numbers_picture",
             lessonText: """
-            One, two, three, four, I declare a thumb war.\
+            One, two, three, four, I declare a thumb war. \
             Numbers are fun and great, but wouldn't they\
             be even better in another language? Learn those\
             digits everyone!
@@ -168,7 +168,7 @@ struct TagalogLessonPlan: LessonPlan {
             image: "color_picture",
             lessonText: """
             Colors of the colorwheel are important to describe\
-            things to the nice people you meet in the Philippines.\
+            things to the nice people you meet in the Philippines. \
             Rainbows are always in the Philippines after rainstorms\
             which are extremely abundant during typhoon season!
             """,

@@ -25,7 +25,7 @@ struct TopicSelectorView: View {
                         Image("Home_Image")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: .infinity, height: .infinity)
+                            .frame(width: .infinity, height: 200)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
                             .shadow(radius: 5)
@@ -46,12 +46,12 @@ struct TopicSelectorView: View {
                     
                     LazyVGrid(columns: columns, spacing: 20) {
                         ForEach(learnTagalogViewModel.topics.sorted(by: { $0.name < $1.name }), id: \.name) { topic in
-                            
                             NavigationLink {
                                 TopicLessonView(
                                     learnTagalogViewModel: LearnTagalogViewModel(),
                                     topicName: topic.name
                                 )
+                                .toolbar(.hidden, for: .tabBar)
                             } label: {
                                 TopicCell(
                                     learnTagalogViewModel: LearnTagalogViewModel(),
