@@ -9,16 +9,18 @@ import SwiftUI
 
 struct FlashCardPracticeView: View {
     
-    @ObservedObject var learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
     let topicName: String
     @State private var selectedIndex: Int = 0
-    @State private var completedFlashCards: Bool = false
+    @State private var shuffledVocab: [LearnTagalogModel.VocabCardContent] = []
+    var flashCardsStudied: Bool {
+        learnTagalogViewModel.progress(for: topicName).vocabStudied
+    }
     
     var body: some View {
         VStack {
-            if let vocab = learnTagalogViewModel.getTopic(by: topicName)?.vocab, vocab.indices.contains(selectedIndex) {
-                let currentCard = vocab[selectedIndex]
-                
+            if shuffledVocab.indices.contains(selectedIndex) {
+                let currentCard = shuffledVocab[selectedIndex]
                 CardView(
                     englishWord: currentCard.englishWord,
                     foreignWord: currentCard.foreignWord,
@@ -66,19 +68,15 @@ struct FlashCardPracticeView: View {
                 .disabled(selectedIndex >= (learnTagalogViewModel.getTopic(by: topicName)?.vocab.count ?? 0) - 1)
             }
             
-            HStack {
-                Text("Done studying?")
-                Toggle(isOn: $completedFlashCards) {
-                    Text("")
-                }
-            }
+            Toggle("Done studying?", isOn: Binding(
+                get: { learnTagalogViewModel.progress(for: topicName).vocabStudied },
+                set: { _ in learnTagalogViewModel.toggleFlashcardsStudied(for: topicName) }
+            ))
             .padding()
         }
         .onAppear {
-            // Ensure the initial selected index is correct when the view appears
-            if let index = learnTagalogViewModel.getTopic(by: topicName)?.vocab.firstIndex(where: { $0.isFaceUp }) {
-                selectedIndex = index
-            }
+            shuffledVocab = learnTagalogViewModel.getShuffledVocab(by: topicName)
+            selectedIndex = 0
         }
     }
 }
@@ -89,42 +87,58 @@ struct CardView: View {
     var foreignWord: String
     var isFaceUp: Bool
     
+    @State private var rotation: Double = 0.0
+    
     var body: some View {
-        if isFaceUp {
-            VStack {
-                ZStack {
-                    Text(englishWord)
-                        .font(.title)
-                        .padding()
-                    Image("")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: .infinity, height: .infinity)
-                        .padding()
-                }
+        ZStack {
+            if rotation >= 90 {
+                CardContent(word: foreignWord)
+                    .rotation3DEffect(.degrees(180), axis: (0, 1, 0))
+            } else {
+                CardContent(word: englishWord)
             }
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(radius: 5)
-            .padding()
-        } else {
-            VStack {
-                ZStack {
-                    Text(foreignWord)
-                        .font(.title)
-                        .padding()
-                    Image("")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: .infinity, height: .infinity)
-                        .padding()
-                }
-            }
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(radius: 5)
-            .padding()
         }
-        
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .shadow(radius: 5)
+        .padding()
+        .rotation3DEffect(
+            .degrees(rotation),
+            axis: (0, 1, 0)
+        )
+        .onAppear {
+            rotation = isFaceUp ? 0 : 180
+        }
+        .onChange(of: isFaceUp) { newValue in
+            withAnimation(.easeInOut) {
+                rotation = newValue ? 0 : 180
+            }
+        }
+        .onAnimationCompleted(for: rotation) {
+            if rotation == 180 {
+                withAnimation {
+                    rotation = 0
+                }
+            }
+        }
+    }
+}
+
+struct CardContent: View {
+    var word: String
+    
+    var body: some View {
+        VStack {
+            ZStack {
+                Text(word)
+                    .font(.title)
+                    .padding()
+                Image("")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: .infinity, height: .infinity)
+                    .padding()
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TopicLessonView: View {
     
-    let learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
     let topicName: String
     @State private var doneWithLesson: Bool = false
     
@@ -22,7 +22,7 @@ struct TopicLessonView: View {
                     List {
                         NavigationLink {
                             FlashCardPracticeView(
-                                learnTagalogViewModel: LearnTagalogViewModel(),
+                                learnTagalogViewModel: _learnTagalogViewModel,
                                 topicName: learnTagalogViewModel.getTopic(by: topicName)?.name ?? ""
                             )
                         } label: {
@@ -31,25 +31,19 @@ struct TopicLessonView: View {
                         
                         NavigationLink {
                             QuizScreenView(
-                                learnTagalogViewModel: LearnTagalogViewModel(),
+                                learnTagalogViewModel: _learnTagalogViewModel,
                                 topicName: learnTagalogViewModel.getTopic(by: topicName)?.name ?? ""
                             )
                         } label: {
                             Text("Take Quiz")
                         }
-                        
-                        HStack {
-                            Text("Done with lesson?")
-                            Toggle(isOn: $doneWithLesson) {
-                                Text("")
-                            }
-                        }
-                        
-                        IndividualTopicProgressView(
-                            learnTagalogViewModel: LearnTagalogViewModel(),
-                            topic: topicName
-                        )
                     }
+                    .listStyle(.plain)
+                    
+                    IndividualTopicProgressView(
+                        learnTagalogViewModel: _learnTagalogViewModel,
+                        topic: topicName
+                    )
                 }
             }
             .navigationTitle("\(learnTagalogViewModel.getTopic(by: topicName)?.name ?? "")")

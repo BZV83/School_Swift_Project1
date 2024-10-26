@@ -10,25 +10,16 @@ import SwiftUI
 struct LearnTagalogHomeView: View {
     
     @State private var isNavigating = false
-    var learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
 
     var body: some View{
-        TabView {
             TopicSelectorView(
-                learnTagalogViewModel: LearnTagalogViewModel()
+                learnTagalogViewModel: _learnTagalogViewModel
             )
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
-            
-            OverallProgressView(learnTagalogViewModel: LearnTagalogViewModel())
-                .tabItem {
-                    Label("Overall Progress", systemImage: "chart.bar.fill")
-                }
-        }
     }
 }
 
 #Preview {
-    LearnTagalogHomeView(learnTagalogViewModel: LearnTagalogViewModel())
+    LearnTagalogHomeView()
+        .environmentObject(LearnTagalogViewModel())
 }

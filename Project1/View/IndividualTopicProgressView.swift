@@ -9,21 +9,45 @@ import SwiftUI
 
 struct IndividualTopicProgressView: View {
     
-    let learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
     var topic: String?
+    var lessonRead: Bool {
+        learnTagalogViewModel.progress(for: topic ?? "").lessonRead
+    }
+    var flashCardsStudied: Bool {
+        learnTagalogViewModel.progress(for: topic ?? "").vocabStudied
+    }
+    var quizTaken: Bool {
+        learnTagalogViewModel.progress(for: topic ?? "").quizPassed
+    }
     
     var body: some View {
-        ZStack {
-            Image(systemName: "checkmark.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: .infinity, height: .infinity)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .padding()
-            
-            Text("\(topic ?? "No Topic")")
-                .foregroundColor(.white)
-                .background(Color.blue)
+        VStack {
+            List {
+                
+                Toggle("Lesson read?", isOn: Binding(
+                    get: { learnTagalogViewModel.progress(for: topic ?? "").lessonRead },
+                    set: { _ in
+                        learnTagalogViewModel.toggleLessonRead(for: topic ?? "")
+                    }
+                ))
+                
+                Toggle("Flashcards studied?", isOn: Binding(
+                    get: { learnTagalogViewModel.progress(for: topic ?? "").vocabStudied },
+                    set: { _ in
+                        learnTagalogViewModel.toggleFlashcardsStudied(for: topic ?? "")
+                    }
+                ))
+                
+                Toggle("Quiz taken?", isOn: Binding(
+                    get: { learnTagalogViewModel.progress(for: topic ?? "").quizPassed },
+                    set: { _ in
+                        learnTagalogViewModel.toggleQuizTaken(for: topic ?? "")
+                    }
+                ))
+                Text("Quiz high score: ")
+            }
+            .listStyle(.plain)
         }
     }
 }

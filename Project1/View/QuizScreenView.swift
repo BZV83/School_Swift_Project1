@@ -9,22 +9,42 @@ import SwiftUI
 
 struct QuizScreenView: View {
     
-    let learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
     let topicName: String
     @State private var currentIndex: Int = 0
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
+            
+            ZStack {
+                //let animation = Animation.easeInOut(duration: 0.1)
+                
+                Pie(
+                    startAngle: angle(for: 0),
+                    endAngle: angle(for: 0.3)
+                )
+                    .padding()
+                    .opacity(0.5)
+                    .frame(width: 100, height:  100)
+                Text("")
+                    .font(.largeTitle)
+            }
+            
             if let question = learnTagalogViewModel.getCurrentQuestion(by: topicName, and: currentIndex) {
                 Form {
                     Section {
                         Text("\(question.question)")
                     }
+                    
                     Section {
                         if let answers = question.answers {
                             ForEach(answers, id: \.self) { answer in
-                                Text("\(answer)")
+                                Button(action: {
+                                    learnTagalogViewModel.handleChosenAnswer(for: answer, and: question.correctAnswer)
+                                }) {
+                                    Text("\(answer)")
+                                }
                             }
                         } else {
                             Text("No answers available.")
@@ -41,12 +61,20 @@ struct QuizScreenView: View {
             } else {
                 Text("Place holder for progress check")
             }
+            
+            HStack {
+                Spacer()
+                Text("Score: \(learnTagalogViewModel.getScore(by: topicName))")
+            }
+            .padding()
         }
         .navigationTitle("Quiz for \(topicName)")
         .onAppear {
             currentIndex = 0
         }
     }
+    
+    // MARK: - Helpers
     
     private func nextQuestion() {
         if currentIndex < learnTagalogViewModel.getTotalQuestions(by: topicName) - 1 {
@@ -63,6 +91,10 @@ struct QuizScreenView: View {
         } else {
             return false
         }
+    }
+    
+    private func angle(for percentOfCircle: Double) -> Angle {
+        Angle.degrees(percentOfCircle * 360 - 90)
     }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 struct TopicSelectorView: View {
     let columnLayout = Array(repeating: GridItem(), count: 2)
     
-    let learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
 
     var body: some View {
         NavigationStack {
@@ -48,15 +48,22 @@ struct TopicSelectorView: View {
                         ForEach(learnTagalogViewModel.topics.sorted(by: { $0.name < $1.name }), id: \.name) { topic in
                             NavigationLink {
                                 TopicLessonView(
-                                    learnTagalogViewModel: LearnTagalogViewModel(),
+                                    learnTagalogViewModel: _learnTagalogViewModel,
                                     topicName: topic.name
                                 )
                                 .toolbar(.hidden, for: .tabBar)
                             } label: {
+                                
+                                var itemsComplete: Bool {
+                                    learnTagalogViewModel.progress(for: topic.name).lessonRead &&
+                                    learnTagalogViewModel.progress(for: topic.name).vocabStudied &&
+                                    learnTagalogViewModel.progress(for: topic.name).quizPassed
+                                }
+                                
                                 TopicCell(
-                                    learnTagalogViewModel: LearnTagalogViewModel(),
+                                    learnTagalogViewModel: _learnTagalogViewModel,
                                     topicName: topic.name,
-                                    topicImage: topic.image
+                                    topicImage: itemsComplete ? "100-complete" : topic.image
                                 )
                             }
                         }
@@ -71,7 +78,7 @@ struct TopicSelectorView: View {
 
 struct TopicCell: View {
     
-    let learnTagalogViewModel: LearnTagalogViewModel
+    @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
     let topicName: String
     let topicImage: String
     

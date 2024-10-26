@@ -11,7 +11,11 @@ protocol LessonPlan {
     var languageName: String { get }
     var topics: [LearnTagalogModel.Topic] { get }
     var progress: [LearnTagalogModel.Progress] { get set }
+    
     mutating func flipCard(for card: LearnTagalogModel.VocabCardContent)
+    mutating func toggleLessonRead(for name: String)
+    mutating func toggleFlashcardsStudied(for name: String)
+    mutating func toggleQuizTaken(for name: String)
 }
 
 struct LearnTagalogModel {
@@ -22,6 +26,7 @@ struct LearnTagalogModel {
         let lessonText: String
         var vocab: [VocabCardContent]
         let quiz: [QuizItem]
+        var quizScore: Int?
     }
     
     struct QuizItem {
@@ -44,7 +49,8 @@ struct LearnTagalogModel {
     }
     
     struct Progress {
-        let topicID: UUID
+        let topicId = UUID()
+        let topicName: String
         var lessonRead = false
         var vocabStudied = false
         var quizPassed = false
@@ -53,9 +59,13 @@ struct LearnTagalogModel {
 }
 
 extension LearnTagalogModel.Progress: Identifiable {
-    var id: UUID {
-        topicID
+    var id: String {
+        topicName
     }
+}
+
+private func key(for title: String, type: String) -> String {
+    "\(title).\(type)"
 }
 
 struct TagalogLessonPlan: LessonPlan {
@@ -87,20 +97,21 @@ struct TagalogLessonPlan: LessonPlan {
             quiz: [
                 LearnTagalogModel.QuizItem(
                     question: "What is an appropriate greeting for the morning time?",
-                    answers: ["Magandang umaga po", "Magandang tanghali po", "Magandang hapon po", "Magandang gabi po"],
-                    correctAnswer: "Magaandang umaga po"
+                    answers: ["A. Magandang umaga po", "B. Magandang tanghali po", "C. Magandang hapon po", "D. Magandang gabi po"],
+                    correctAnswer: "A. Magaandang umaga po"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "How would you ask someone how they are doing?",
-                    answers: ["Kamusta po kayo?", "Ingat po", "Mabuti po ako", "Magandang umaga po"],
-                    correctAnswer: "Kamusta po kayo?"
+                    answers: ["A. Kamusta po kayo?", "B. Ingat po", "C. Mabuti po ako", "D. Magandang umaga po"],
+                    correctAnswer: "A. Kamusta po kayo?"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "When should you use 'po'?",
-                    answers: ["Never", "When talking to old people", "When talking to a friend", "Always"],
-                    correctAnswer: "Always"
+                    answers: ["A. Never", "B. When talking to old people", "C. When talking to a friend", "D. Always"],
+                    correctAnswer: "D. Always"
                 )
-            ]
+            ],
+            quizScore: 0
         ),
         LearnTagalogModel.Topic(
             name: "Days of the Week",
@@ -122,20 +133,21 @@ struct TagalogLessonPlan: LessonPlan {
             quiz: [
                 LearnTagalogModel.QuizItem(
                     question: "What is Monday?",
-                    answers: ["Lunes", "Martes", "Miyerkules", "Huwebes", "Biyernes", "Sabado", "Linggo"],
-                    correctAnswer: "Lunes"
+                    answers: ["A. Lunes", "B. Martes", "C. Miyerkules", "D. Huwebes", "E. Biyernes", "F. Sabado", "G. Linggo"],
+                    correctAnswer: "A. Lunes"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "What is Tuesday?",
-                    answers: ["Lunes", "Martes", "Miyerkules", "Huwebes", "Biyernes", "Sabado", "Linggo"],
-                    correctAnswer: "Martes"
+                    answers: ["A. Lunes", "B. Martes", "C. Miyerkules", "D. Huwebes", "E. Biyernes", "F. Sabado", "G. Linggo"],
+                    correctAnswer: "B. Martes"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "What is Wednesday?",
-                    answers: ["Lunes", "Martes", "Miyerkules", "Huwebes", "Biyernes", "Sabado", "Linggo"],
-                    correctAnswer: "Miyerkules"
+                    answers: ["A. Lunes", "B. Martes", "C. Miyerkules", "D. Huwebes", "E. Biyernes", "F. Sabado", "G. Linggo"],
+                    correctAnswer: "C. Miyerkules"
                 )
-            ]
+            ],
+            quizScore: 0
         ),
         LearnTagalogModel.Topic(
             name: "Numbers",
@@ -161,15 +173,16 @@ struct TagalogLessonPlan: LessonPlan {
             quiz: [
                 LearnTagalogModel.QuizItem(
                     question: "Which answer shows the correct order of even numbers 1-10 from lowest to highest?",
-                    answers: ["Siyam, Walo, Apat, Isa, Dalawa", "Sampu, Walo, Anim, Apat, Dalawa", "Dalawa, Apat, Anim, Walo, Sampu"],
-                    correctAnswer: "Dalawa, Apat, Anim, Walo, Sampu"
+                    answers: ["A. Siyam, Walo, Apat, Isa, Dalawa", "B. Sampu, Walo, Anim, Apat, Dalawa", "C. Dalawa, Apat, Anim, Walo, Sampu"],
+                    correctAnswer: "C. Dalawa, Apat, Anim, Walo, Sampu"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "Which answer shows the correct order of odd numbers 1-10 from lowest to highest?",
-                    answers: ["Siyam, Walo, Apat, Isa, Dalawa", "Isa, Tatlo, Lima, Pito, Siyam", "Dalawa, Apat, Anim, Walo, Sampu"],
-                    correctAnswer: "Isa, Tatlo, Lima, Pito, Siyam"
+                    answers: ["A. Siyam, Walo, Apat, Isa, Dalawa", "B. Isa, Tatlo, Lima, Pito, Siyam", "C. Dalawa, Apat, Anim, Walo, Sampu"],
+                    correctAnswer: "B. Isa, Tatlo, Lima, Pito, Siyam"
                 )
-            ]
+            ],
+            quizScore: 0
         ),
         LearnTagalogModel.Topic(
             name: "Colors",
@@ -189,15 +202,16 @@ struct TagalogLessonPlan: LessonPlan {
             quiz: [
                 LearnTagalogModel.QuizItem(
                     question: "What is the color of healthy grass?",
-                    answers: ["Pula", "Asul", "Dilaw", "Berde"],
-                    correctAnswer: "Berde"
+                    answers: ["A. Pula", "B. Asul", "C. Dilaw", "D. Berde"],
+                    correctAnswer: "D. Berde"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "What is the color of a ripe sunburn on a redhead?",
-                    answers: ["Pula", "Asul", "Dilaw", "Berde"],
-                    correctAnswer: "Pula"
+                    answers: ["A. Pula", "B. Asul", "C. Dilaw", "D. Berde"],
+                    correctAnswer: "A. Pula"
                 )
-            ]
+            ],
+            quizScore: 0
         )
     ]
     
@@ -209,5 +223,55 @@ struct TagalogLessonPlan: LessonPlan {
     
     mutating func flipCard(for card: LearnTagalogModel.VocabCardContent) {
         card.isFaceUp.toggle()
+    }
+    
+    mutating func toggleLessonRead(for name: String) {
+        if let index = progress.firstIndex(where: { $0.topicName == name}) {
+            progress[index].lessonRead.toggle()
+            UserDefaults.standard
+                .set(
+                    progress[index].lessonRead,
+                    forKey: key(for: name, type: Key.lessonProgress)
+                )
+        } else {
+            progress.append(LearnTagalogModel.Progress(topicName: name))
+            toggleLessonRead(for: name)
+        }
+    }
+    
+    mutating func toggleFlashcardsStudied(for name: String) {
+        if let index = progress.firstIndex(where: { $0.topicName == name}) {
+            progress[index].vocabStudied.toggle()
+            UserDefaults.standard
+                .set(
+                    progress[index].vocabStudied,
+                    forKey: key(for: name, type: Key.cardStudyProgress)
+                )
+        } else {
+            progress.append(LearnTagalogModel.Progress(topicName: name))
+            toggleFlashcardsStudied(for: name)
+        }
+    }
+    
+    
+    mutating func toggleQuizTaken(for name: String) {
+        if let index = progress.firstIndex(where: { $0.topicName == name}) {
+            progress[index].quizPassed.toggle()
+            UserDefaults.standard
+                .set(
+                    progress[index].quizPassed,
+                    forKey: key(for: name, type: Key.quizPassed)
+                )
+        } else {
+            progress.append(LearnTagalogModel.Progress(topicName: name))
+            toggleQuizTaken(for: name)
+        }
+    }
+    
+    private struct Key {
+        static let lessonProgress = "Progress"
+        static let highScore = "HighScore"
+        static let cardStudyProgress = "FlashCardProgress"
+        static let quizPassed = "QuizPassed"
     }
 }
