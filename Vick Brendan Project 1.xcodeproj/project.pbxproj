@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		0E300E7C2CB824A700C4E30F /* Project1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E300E7C2CB824A700C4E30F /* Vick Brendan Project 1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Vick Brendan Project 1.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		0E300E7E2CB824A700C4E30F /* Project1 */ = {
+		0E300E7E2CB824A700C4E30F /* Vick Brendan Project 1 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Project1;
+			path = "Vick Brendan Project 1";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		0E300E732CB824A700C4E30F = {
 			isa = PBXGroup;
 			children = (
-				0E300E7E2CB824A700C4E30F /* Project1 */,
+				0E300E7E2CB824A700C4E30F /* Vick Brendan Project 1 */,
 				0E300E7D2CB824A700C4E30F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		0E300E7D2CB824A700C4E30F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0E300E7C2CB824A700C4E30F /* Project1.app */,
+				0E300E7C2CB824A700C4E30F /* Vick Brendan Project 1.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0E300E7B2CB824A700C4E30F /* Project1 */ = {
+		0E300E7B2CB824A700C4E30F /* Vick Brendan Project 1 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0E300E8A2CB824A900C4E30F /* Build configuration list for PBXNativeTarget "Project1" */;
+			buildConfigurationList = 0E300E8A2CB824A900C4E30F /* Build configuration list for PBXNativeTarget "Vick Brendan Project 1" */;
 			buildPhases = (
 				0E300E782CB824A700C4E30F /* Sources */,
 				0E300E792CB824A700C4E30F /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				0E300E7E2CB824A700C4E30F /* Project1 */,
+				0E300E7E2CB824A700C4E30F /* Vick Brendan Project 1 */,
 			);
-			name = Project1;
+			name = "Vick Brendan Project 1";
 			packageProductDependencies = (
 			);
 			productName = Project1;
-			productReference = 0E300E7C2CB824A700C4E30F /* Project1.app */;
+			productReference = 0E300E7C2CB824A700C4E30F /* Vick Brendan Project 1.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0E300E772CB824A700C4E30F /* Build configuration list for PBXProject "Project1" */;
+			buildConfigurationList = 0E300E772CB824A700C4E30F /* Build configuration list for PBXProject "Vick Brendan Project 1" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0E300E7B2CB824A700C4E30F /* Project1 */,
+				0E300E7B2CB824A700C4E30F /* Vick Brendan Project 1 */,
 			);
 		};
 /* End PBXProject section */
@@ -309,7 +309,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0E300E772CB824A700C4E30F /* Build configuration list for PBXProject "Project1" */ = {
+		0E300E772CB824A700C4E30F /* Build configuration list for PBXProject "Vick Brendan Project 1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0E300E882CB824A900C4E30F /* Debug */,
@@ -318,7 +318,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0E300E8A2CB824A900C4E30F /* Build configuration list for PBXNativeTarget "Project1" */ = {
+		0E300E8A2CB824A900C4E30F /* Build configuration list for PBXNativeTarget "Vick Brendan Project 1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0E300E8B2CB824A900C4E30F /* Debug */,
