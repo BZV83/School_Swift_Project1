@@ -109,9 +109,9 @@ struct CardView: View {
         .onAppear {
             rotation = isFaceUp ? 0 : 180
         }
-        .onChange(of: isFaceUp) { newValue in
+        .onChange(of: isFaceUp) {
             withAnimation(.easeInOut) {
-                rotation = newValue ? 0 : 180
+                rotation = isFaceUp ? 0 : 180
             }
         }
         .onAnimationCompleted(for: rotation) {
