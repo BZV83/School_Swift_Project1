@@ -10,9 +10,14 @@ import SwiftUI
 struct QuizScreenView: View {
     
     @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
-    let topicName: String
-    @State private var currentIndex: Int = 0
     @Environment(\.presentationMode) var presentationMode
+    
+    let topicName: String
+    
+    @State private var currentIndex: Int = 0
+    @State private var isShaking: Bool = false
+    @State private var selectedAnswer: String? = nil
+    @State private var isCorrectAnswerSelected: Bool = false
     
     var body: some View {
         VStack {
@@ -33,38 +38,74 @@ struct QuizScreenView: View {
             
             if let question = learnTagalogViewModel.getCurrentQuestion(by: topicName, and: currentIndex) {
                 Form {
+                    //MARK: - Question
                     Section {
                         Text("\(question.question)")
                     }
                     
+                    //MARK: - Answers
                     Section {
                         if let answers = question.answers {
                             ForEach(answers, id: \.self) { answer in
                                 Button(action: {
-                                    learnTagalogViewModel.handleChosenAnswer(for: answer, and: question.correctAnswer)
+                                    selectedAnswer = answer
+                                    if learnTagalogViewModel.handleChosenAnswer(
+                                        for: topicName,
+                                        question: question.question,
+                                        answer: answer,
+                                        correctAnswer: question.correctAnswer
+                                    ) {
+                                        // BUTTON ANIMATED IF CORRECT
+                                        withAnimation(.default) {
+                                            isShaking = true
+                                            isCorrectAnswerSelected = true
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            withAnimation(.default) {
+                                                isShaking = false
+                                            }
+                                        }
+                                    } else {
+                                        isCorrectAnswerSelected = false
+                                    }
                                 }) {
                                     Text("\(answer)")
+                                        .modifier(ShakeEffect(shakes: isShaking && answer == question.correctAnswer ? 3 : 0))
                                 }
                             }
                         } else {
                             Text("No answers available.")
                         }
                     }
+                    
+                    //MARK: - Next Question/Finish
                     Section {
                         Button(action: {
                             nextQuestion()
+                            isCorrectAnswerSelected = false
                         }) {
                             Text(currentIndex < learnTagalogViewModel.getTotalQuestions(by: topicName) - 1 ? "Next Question" : "Finish Quiz")
+                        }
+                        .disabled(!isCorrectAnswerSelected)
+                        
+                        //Hide toggle until the end
+                        if currentIndex == learnTagalogViewModel.getTotalQuestions(by: topicName) - 1 && isCorrectAnswerSelected {
+                            Toggle("Quiz taken?", isOn: Binding(
+                                get: { learnTagalogViewModel.progress(for: topicName).quizPassed },
+                                set: { _ in
+                                    learnTagalogViewModel.toggleQuizTaken(for: topicName)
+                                }
+                            ))
                         }
                     }
                 }
             } else {
-                Text("Place holder for progress check")
+                Text("Error")
             }
-            
+            //MARK: - Score Placeholder
             HStack {
                 Spacer()
-                Text("Score: \(learnTagalogViewModel.getScore(by: topicName))")
+                Text("Score: 100")
             }
             .padding()
         }

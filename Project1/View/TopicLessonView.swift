@@ -11,15 +11,17 @@ struct TopicLessonView: View {
     
     @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
     let topicName: String
-    @State private var doneWithLesson: Bool = false
     
     var body: some View {
             NavigationStack {
                 VStack {
+                    
+                    //MARK: - Lesson
                     Text("\(learnTagalogViewModel.getTopic(by: topicName)?.lessonText ?? "")")
                         .padding()
                     
                     List {
+                        //MARK: - Flashcards
                         NavigationLink {
                             FlashCardPracticeView(
                                 learnTagalogViewModel: _learnTagalogViewModel,
@@ -29,6 +31,7 @@ struct TopicLessonView: View {
                             Text("Practice with Flashcards")
                         }
                         
+                        //MARK: - Quiz
                         NavigationLink {
                             QuizScreenView(
                                 learnTagalogViewModel: _learnTagalogViewModel,
@@ -37,13 +40,31 @@ struct TopicLessonView: View {
                         } label: {
                             Text("Take Quiz")
                         }
+                        
+                        //MARK: - Progress Markers
+                        Toggle("Lesson read?", isOn: Binding(
+                            get: { learnTagalogViewModel.progress(for: topicName).lessonRead },
+                            set: { _ in
+                                learnTagalogViewModel.toggleLessonRead(for: topicName)
+                            }
+                        ))
+                        
+                        Toggle("Flashcards studied?", isOn: Binding(
+                            get: { learnTagalogViewModel.progress(for: topicName).vocabStudied },
+                            set: { _ in
+                                learnTagalogViewModel.toggleFlashcardsStudied(for: topicName)
+                            }
+                        ))
+                        
+                        Toggle("Quiz taken?", isOn: Binding(
+                            get: { learnTagalogViewModel.progress(for: topicName).quizPassed },
+                            set: { _ in
+                                learnTagalogViewModel.toggleQuizTaken(for: topicName)
+                            }
+                        ))
+                        Text("Quiz high score: 100,000")
                     }
                     .listStyle(.plain)
-                    
-                    IndividualTopicProgressView(
-                        learnTagalogViewModel: _learnTagalogViewModel,
-                        topic: topicName
-                    )
                 }
             }
             .navigationTitle("\(learnTagalogViewModel.getTopic(by: topicName)?.name ?? "")")

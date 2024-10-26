@@ -10,15 +10,19 @@ import SwiftUI
 struct FlashCardPracticeView: View {
     
     @EnvironmentObject var learnTagalogViewModel: LearnTagalogViewModel
-    let topicName: String
+    
     @State private var selectedIndex: Int = 0
     @State private var shuffledVocab: [LearnTagalogModel.VocabCardContent] = []
+    
+    let topicName: String
     var flashCardsStudied: Bool {
         learnTagalogViewModel.progress(for: topicName).vocabStudied
     }
     
     var body: some View {
         VStack {
+            
+            //MARK: - Shuffled Flashcards
             if shuffledVocab.indices.contains(selectedIndex) {
                 let currentCard = shuffledVocab[selectedIndex]
                 CardView(
@@ -30,6 +34,8 @@ struct FlashCardPracticeView: View {
                     learnTagalogViewModel.flipCard(card: currentCard)
                 }
             }
+            
+            //MARK: - Next and Previous
             HStack {
                 Button(action: {
                     if selectedIndex > 0 {
@@ -68,6 +74,7 @@ struct FlashCardPracticeView: View {
                 .disabled(selectedIndex >= (learnTagalogViewModel.getTopic(by: topicName)?.vocab.count ?? 0) - 1)
             }
             
+            //MARK: - Flashcard Done Toggle
             Toggle("Done studying?", isOn: Binding(
                 get: { learnTagalogViewModel.progress(for: topicName).vocabStudied },
                 set: { _ in learnTagalogViewModel.toggleFlashcardsStudied(for: topicName) }
@@ -81,6 +88,7 @@ struct FlashCardPracticeView: View {
     }
 }
 
+//MARK: - Animated Card
 struct CardView: View {
 
     var englishWord: String

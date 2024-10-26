@@ -16,12 +16,13 @@ struct TopicSelectorView: View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    // Define the grid layout with 2 columns
+                    // Define grid layout with 2 columns
                     let columns = [
                         GridItem(),
                         GridItem()
                     ]
 
+                    //Scrollable pictures
                     HomePictureView()
                         .frame(height: 225)
                     
@@ -35,6 +36,7 @@ struct TopicSelectorView: View {
                                 .toolbar(.hidden, for: .tabBar)
                             } label: {
                                 
+                                //Show different topic pic if all items are complete
                                 var itemsComplete: Bool {
                                     learnTagalogViewModel.progress(for: topic.name).lessonRead &&
                                     learnTagalogViewModel.progress(for: topic.name).vocabStudied &&

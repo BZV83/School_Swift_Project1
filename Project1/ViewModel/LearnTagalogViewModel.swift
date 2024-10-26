@@ -11,7 +11,8 @@ class LearnTagalogViewModel: ObservableObject {
     
     // MARK: - Properties
     
-    @Published private var lessonPlan: LessonPlan = TagalogLessonPlan(progress: [])
+    @Published private var lessonPlan: LessonPlan = TagalogLessonPlan()
+    
     private var soundPlayer = SoundPlayer()
     
     // MARK: - Model Access
@@ -56,11 +57,11 @@ class LearnTagalogViewModel: ObservableObject {
         return topic.quiz.indices.contains(index) ? topic.quiz[index] : nil
     }
     
-    func getScore(by name: String) -> Int {
-        lessonPlan.topics.first(where: { $0.name == name })?.quizScore ?? 0
-    }
-    
-    func setScore(by name: String, _ score: Int) {
+    private func addToScore(by name: String, and question: String) {
+        var score = lessonPlan.topics.first(where: { $0.name == name })?.quizScore ?? 0
+        
+        score += 10
+        print("Score: \(score)")
     }
     
     func getShuffledVocab(by topicName: String) -> [LearnTagalogModel.VocabCardContent] {
@@ -83,15 +84,22 @@ class LearnTagalogViewModel: ObservableObject {
     
     // MARK: - User Intent
     
-    func handleChosenAnswer(for answer: String, and correctAnswer: String) {
+    func handleChosenAnswer(for topicName: String, question: String, answer: String, correctAnswer: String) -> Bool {
         if answer == correctAnswer {
             Task {
                 await soundPlayer.playSound(named: "correct.m4a")
             }
+            
+            //TODO: Allow cumulative score
+            addToScore(by: topicName, and: question)
+            
+            return true
         } else {
             Task {
                 await soundPlayer.playSound(named: "wrong.m4a")
             }
+            
+            return false
         }
     }
     

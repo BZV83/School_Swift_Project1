@@ -73,7 +73,88 @@ struct TagalogLessonPlan: LessonPlan {
     // MARK: - Read-only
     
     let languageName = "Tagalog"
-    let topics = [
+    let topics = Data.tagalogTopics
+        
+    
+    // MARK: - Read-write Properties
+    
+    var progress: [LearnTagalogModel.Progress] = TagalogLessonPlan.readProgressRecords()
+    
+    // MARK: - Helpers
+    
+    //Flip flashcard
+    mutating func flipCard(for card: LearnTagalogModel.VocabCardContent) {
+        card.isFaceUp.toggle()
+    }
+    
+    mutating func toggleLessonRead(for name: String) {
+        if let index = progress.firstIndex(where: { $0.topicName == name}) {
+            progress[index].lessonRead.toggle()
+            UserDefaults.standard
+                .set(
+                    progress[index].lessonRead,
+                    forKey: key(for: name, type: Key.lessonProgress)
+                )
+        } else {
+            progress.append(LearnTagalogModel.Progress(topicName: name))
+            toggleLessonRead(for: name)
+        }
+    }
+    
+    mutating func toggleFlashcardsStudied(for name: String) {
+        if let index = progress.firstIndex(where: { $0.topicName == name}) {
+            progress[index].vocabStudied.toggle()
+            UserDefaults.standard
+                .set(
+                    progress[index].vocabStudied,
+                    forKey: key(for: name, type: Key.cardStudyProgress)
+                )
+        } else {
+            progress.append(LearnTagalogModel.Progress(topicName: name))
+            toggleFlashcardsStudied(for: name)
+        }
+    }
+    
+    mutating func toggleQuizTaken(for name: String) {
+        if let index = progress.firstIndex(where: { $0.topicName == name}) {
+            progress[index].quizPassed.toggle()
+            UserDefaults.standard
+                .set(
+                    progress[index].quizPassed,
+                    forKey: key(for: name, type: Key.quizPassed)
+                )
+        } else {
+            progress.append(LearnTagalogModel.Progress(topicName: name))
+            toggleQuizTaken(for: name)
+        }
+    }
+    
+    private static func readProgressRecords() -> [LearnTagalogModel.Progress] {
+        var progressRecords = [LearnTagalogModel.Progress]()
+        
+        Data.tagalogTopics.forEach { topic in
+            var progressRecord = LearnTagalogModel.Progress(topicName: topic.name)
+            
+            progressRecord.lessonRead = UserDefaults.standard.bool (forKey: key(for: topic.name, type: Key.lessonProgress))
+            progressRecord.quizPassed = UserDefaults.standard.bool (forKey: key(for: topic.name, type: Key.quizPassed))
+            progressRecord.vocabStudied = UserDefaults.standard.bool (forKey: key(for: topic.name, type: Key.cardStudyProgress))
+            
+            progressRecords.append(progressRecord)
+        }
+        
+        return progressRecords
+    }
+    
+    private struct Key {
+        static let lessonProgress = "Progress"
+        static let highScore = "HighScore"
+        static let cardStudyProgress = "FlashCardProgress"
+        static let quizPassed = "QuizPassed"
+    }
+}
+
+private struct Data {
+    static let tagalogTopics = [
         LearnTagalogModel.Topic(
             name: "Greetings and Farewells",
             image: "hello_picture",
@@ -98,7 +179,7 @@ struct TagalogLessonPlan: LessonPlan {
                 LearnTagalogModel.QuizItem(
                     question: "What is an appropriate greeting for the morning time?",
                     answers: ["A. Magandang umaga po", "B. Magandang tanghali po", "C. Magandang hapon po", "D. Magandang gabi po"],
-                    correctAnswer: "A. Magaandang umaga po"
+                    correctAnswer: "A. Magandang umaga po"
                 ),
                 LearnTagalogModel.QuizItem(
                     question: "How would you ask someone how they are doing?",
@@ -110,8 +191,7 @@ struct TagalogLessonPlan: LessonPlan {
                     answers: ["A. Never", "B. When talking to old people", "C. When talking to a friend", "D. Always"],
                     correctAnswer: "D. Always"
                 )
-            ],
-            quizScore: 0
+            ]
         ),
         LearnTagalogModel.Topic(
             name: "Days of the Week",
@@ -146,8 +226,7 @@ struct TagalogLessonPlan: LessonPlan {
                     answers: ["A. Lunes", "B. Martes", "C. Miyerkules", "D. Huwebes", "E. Biyernes", "F. Sabado", "G. Linggo"],
                     correctAnswer: "C. Miyerkules"
                 )
-            ],
-            quizScore: 0
+            ]
         ),
         LearnTagalogModel.Topic(
             name: "Numbers",
@@ -181,8 +260,7 @@ struct TagalogLessonPlan: LessonPlan {
                     answers: ["A. Siyam, Walo, Apat, Isa, Dalawa", "B. Isa, Tatlo, Lima, Pito, Siyam", "C. Dalawa, Apat, Anim, Walo, Sampu"],
                     correctAnswer: "B. Isa, Tatlo, Lima, Pito, Siyam"
                 )
-            ],
-            quizScore: 0
+            ]
         ),
         LearnTagalogModel.Topic(
             name: "Colors",
@@ -210,68 +288,7 @@ struct TagalogLessonPlan: LessonPlan {
                     answers: ["A. Pula", "B. Asul", "C. Dilaw", "D. Berde"],
                     correctAnswer: "A. Pula"
                 )
-            ],
-            quizScore: 0
+            ]
         )
     ]
-    
-    // MARK: - Read-write Properties
-    
-    var progress: [LearnTagalogModel.Progress]
-    
-    // MARK: - Helpers
-    
-    mutating func flipCard(for card: LearnTagalogModel.VocabCardContent) {
-        card.isFaceUp.toggle()
-    }
-    
-    mutating func toggleLessonRead(for name: String) {
-        if let index = progress.firstIndex(where: { $0.topicName == name}) {
-            progress[index].lessonRead.toggle()
-            UserDefaults.standard
-                .set(
-                    progress[index].lessonRead,
-                    forKey: key(for: name, type: Key.lessonProgress)
-                )
-        } else {
-            progress.append(LearnTagalogModel.Progress(topicName: name))
-            toggleLessonRead(for: name)
-        }
-    }
-    
-    mutating func toggleFlashcardsStudied(for name: String) {
-        if let index = progress.firstIndex(where: { $0.topicName == name}) {
-            progress[index].vocabStudied.toggle()
-            UserDefaults.standard
-                .set(
-                    progress[index].vocabStudied,
-                    forKey: key(for: name, type: Key.cardStudyProgress)
-                )
-        } else {
-            progress.append(LearnTagalogModel.Progress(topicName: name))
-            toggleFlashcardsStudied(for: name)
-        }
-    }
-    
-    
-    mutating func toggleQuizTaken(for name: String) {
-        if let index = progress.firstIndex(where: { $0.topicName == name}) {
-            progress[index].quizPassed.toggle()
-            UserDefaults.standard
-                .set(
-                    progress[index].quizPassed,
-                    forKey: key(for: name, type: Key.quizPassed)
-                )
-        } else {
-            progress.append(LearnTagalogModel.Progress(topicName: name))
-            toggleQuizTaken(for: name)
-        }
-    }
-    
-    private struct Key {
-        static let lessonProgress = "Progress"
-        static let highScore = "HighScore"
-        static let cardStudyProgress = "FlashCardProgress"
-        static let quizPassed = "QuizPassed"
-    }
 }
