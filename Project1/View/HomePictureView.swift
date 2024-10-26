@@ -23,7 +23,7 @@ struct HomePictureView: View {
                     Image(image.key)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: .infinity, height: 200)
+                        .frame(height: 200)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
                         .shadow(radius: 5)
@@ -41,6 +41,7 @@ struct HomePictureView: View {
                         Spacer()
                     }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
         .tabViewStyle(.page)

@@ -18,7 +18,7 @@ struct TopicCell: View {
             Image(topicImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: .infinity, height: 100)
+                .frame(height: 100)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 2))
 
@@ -29,6 +29,7 @@ struct TopicCell: View {
                 .background(Color.black.opacity(0.7))
                 .padding(5)
         }
+        .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(10)
         .shadow(radius: 5)

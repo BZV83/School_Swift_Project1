@@ -66,7 +66,15 @@ struct QuizScreenView: View {
                                             }
                                         }
                                     } else {
-                                        isCorrectAnswerSelected = false
+                                        withAnimation(.default) {
+                                            isShaking = true
+                                            isCorrectAnswerSelected = false
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            withAnimation(.default) {
+                                                isShaking = false
+                                            }
+                                        }
                                     }
                                 }) {
                                     Text("\(answer)")
