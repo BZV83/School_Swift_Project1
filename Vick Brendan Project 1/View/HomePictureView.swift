@@ -38,6 +38,7 @@ struct HomePictureView: View {
                                 .padding()
                             Spacer()
                         }
+                        .layoutPriority(1)
                         Spacer()
                     }
                 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol LessonPlan {
     var languageName: String { get }
